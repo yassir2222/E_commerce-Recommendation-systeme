@@ -14,4 +14,6 @@ urlpatterns = [
     path("add_to_wishlist/", views.add_to_wishlist, name="add_to_wishlist"),
     path("delete_cartitem/<int:pk>/", views.delete_cartitem, name="delete_cartitem"),
 
+    path("search",views.product_search, name="search"),
+
 ]
