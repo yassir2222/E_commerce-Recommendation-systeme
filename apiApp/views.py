@@ -1,11 +1,16 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from .models import Product, Category, Cart , CartItem
+from .models import Product, Category, Cart, CartItem, Review , Wishlist
 from .serializers import ProductSerializer, ProductListSerializer, ProductDetailSerializer, CategoryListSerializer, \
-    CategoryDetailSerializer, CartItemSerializer ,CartSerializer
+    CategoryDetailSerializer, CartItemSerializer, CartSerializer, ReviewSerializer,WishlistSerializer
 from rest_framework.response import Response
+from django.db.models import Q
 
 # Create your views here.
+
+User = get_user_model()
+
 @api_view(["GET"])
 def product_list(request):
     products = Product.objects.filter(featured=True)
@@ -62,4 +67,98 @@ def update_cartitem_quantity(request):
 
     serializer = CartItemSerializer(cartitem)
     return Response({"data": serializer.data, "message": "Cartitem updated successfully!"})
+
+@api_view(["POST"])
+def add_review(request):
+    product_id = request.data.get("product_id")
+    email = request.data.get("email")
+    rating = request.data.get("rating")
+    review_text = request.data.get("review")
+
+    product = Product.objects.get(id=product_id)
+    user = User.objects.get(email=email)
+    if Review.objects.filter(product=product, user=user).exists():
+        return Response({"message": "Review already exists!"})
+
+    review = Review.objects.create(product=product, user=user, rating=rating , review=review_text)
+    serializer = ReviewSerializer(review)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+def add_review(request):
+    product_id = request.data.get("product_id")
+    email = request.data.get("email")
+    rating = request.data.get("rating")
+    review_text = request.data.get("review")
+
+    product = Product.objects.get(id=product_id)
+    user = User.objects.get(email=email)
+    if Review.objects.filter(product=product, user=user).exists():
+        return Response({"message": "Review already exists!"})
+
+    review = Review.objects.create(product=product, user=user, rating=rating , review=review_text)
+    serializer = ReviewSerializer(review)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def update_review(request, pk):
+    review = Review.objects.get(id=pk)
+    rating = request.data.get("rating")
+    review_text = request.data.get("review")
+
+    review.rating = rating
+    review.review = review_text
+    review.save()
+
+    serializer = ReviewSerializer(review)
+    return Response(serializer.data)
+
+
+
+@api_view(['DELETE'])
+def delete_review(request, pk):
+    review = Review.objects.get(id=pk)
+    review.delete()
+
+    return Response("Review deleted successfully!", status=204)
+
+@api_view(['DELETE'])
+def delete_cartitem(request, pk):
+    cartitem = CartItem.objects.get(id=pk)
+    cartitem.delete()
+
+    return Response("Cart item deleted successfully!", status=204)
+
+
+@api_view(["POST"])
+def add_to_wishlist(request):
+    email = request.data.get("email")
+    product_id = request.data.get("product_id")
+
+    user = User.objects.get(email=email)
+    user = User.objects.get(email=email)
+    product = Product.objects.get(id=product_id)
+
+    wishlist = Wishlist.objects.filter(user=user, product=product)
+    if wishlist:
+        wishlist.delete()
+        return Response("Wishlist deleted successfully!", status=204)
+
+    new_wishlist = Wishlist.objects.create(user=user, product=product)
+    serializer = WishlistSerializer(new_wishlist)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def product_search(request):
+    query = request.query_params.get("query")
+    if not query:
+        return Response("No query provided", status=400)
+
+    products = Product.objects.filter(Q(name__icontains=query) |
+                                      Q(description__icontains=query) |
+                                      Q(category__name__icontains=query))
+    serializer = ProductListSerializer(products, many=True)
+    return Response(serializer.data)
 
