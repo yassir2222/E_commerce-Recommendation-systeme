@@ -6,10 +6,13 @@ from .serializers import ProductSerializer, ProductListSerializer, ProductDetail
     CategoryDetailSerializer, CartItemSerializer, CartSerializer, ReviewSerializer,WishlistSerializer
 from rest_framework.response import Response
 from django.db.models import Q
+import stripe
+from django.conf import settings
 
 # Create your views here.
 
 User = get_user_model()
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @api_view(["GET"])
 def product_list(request):
@@ -161,4 +164,39 @@ def product_search(request):
                                       Q(category__name__icontains=query))
     serializer = ProductListSerializer(products, many=True)
     return Response(serializer.data)
+
+
+
+
+@api_view(['POST'])
+def create_checkout_session(request):
+    print(settings.STRIPE_SECRET_KEY)
+    cart_code = request.data.get("cart_code")
+    email = request.data.get("email")
+    cart = Cart.objects.get(cart_code=cart_code)
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            customer_email=email,
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data':{
+                        'currency': 'usd',
+                        'product_data': {'name':item.product.name},
+                        'unit_amount' : int(item.product.price)*100,
+                    },
+                    'quantity' : item.quantity,
+
+                }
+                for item in cart.cartitems.all()
+            ],
+            mode='payment',
+            success_url="http://localhost:8008/sucess",
+            cancel_url="http://localhost:8008/cancel" ,
+        )
+        return Response({ 'data':checkout_session})
+
+    except Exception as e:
+        return Response({ 'error':str(e)}, status=400)
+
 
