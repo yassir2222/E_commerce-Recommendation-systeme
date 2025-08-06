@@ -1,11 +1,26 @@
 import React from 'react'
-import { Button } from "@/components/ui/button"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AppLayout from './ui_component/AppLayout';
+import HomePage from './pages/HomePage';
+import DetailPage from './pages/DetailPage';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button className="bg-blue-500 text-white">Click me</Button>
-    </div>
+<div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<AppLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path='detail' element={<DetailPage />} />
+          <Route path='profile' element={<ProfilePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+
+</div>
+    
+
   )
 }
 
