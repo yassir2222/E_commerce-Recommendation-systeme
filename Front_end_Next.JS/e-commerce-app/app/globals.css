@@ -121,3 +121,57 @@
   }
 }
 
+
+
+
+
+
+@layer utilities {
+  .search-form {
+    @apply w-[300px] max-sm:w-[250px] max-sm:h-[40px] max-sm:text-[14px] 
+           h-[50px] bg-white border-3 border-black rounded-[80px] 
+           px-5 max-sm:px-3 flex flex-row items-center gap-5;
+  }
+
+  .nav-btn {
+    @apply px-4 py-2 bg-gray-900 text-white border border-gray-900 
+           rounded-md hover:bg-gray-700 transition cursor-pointer;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .main-max-width {
+    @apply max-w-[1440px];
+  }
+
+  .padding-x {
+    @apply px-24 max-sm:px-10;
+  }
+
+  .default-btn{
+    @apply cursor-pointer w-[200px] max-md:w-full h-[42px] bg-black text-white border-2 border-black font-medium rounded-md text-[14px] flex items-center justify-center transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800
+  }
+
+  .wish-btn{
+    @apply cursor-pointer w-[200px] max-md:w-full h-[42px] bg-white border-2 border-black text-black font-medium rounded-md flex items-center justify-center text-[14px] transition-all duration-300 hover:bg-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed
+  }
+
+  .checkout-btn{
+    @apply w-full mt-5 py-3 bg-black text-white font-semibold text-sm rounded-lg hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+  }
+
+  .update-item-btn{ 
+    @apply px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+  }
+
+  .custom-overflow{
+    @apply overflow-x-auto whitespace-nowrap
+  }
+
+  .cat-btn{
+    @apply w-[250px] max-md:w-full h-[50px] rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 shadow-md flex items-center gap-4 px-4 transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-100
+  }
+}
+
