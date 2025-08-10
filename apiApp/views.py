@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from .models import Product, Category, Cart, CartItem, Review , Wishlist
+from .models import Product, Category, Cart, CartItem, Review, Wishlist, Order
 from .serializers import ProductSerializer, ProductListSerializer, ProductDetailSerializer, CategoryListSerializer, \
-    CategoryDetailSerializer, CartItemSerializer, CartSerializer, ReviewSerializer,WishlistSerializer
+    CategoryDetailSerializer, CartItemSerializer, CartSerializer, ReviewSerializer, WishlistSerializer, OrderSerializer
 from rest_framework.response import Response
 from django.db.models import Q
 import stripe
@@ -199,4 +199,10 @@ def create_checkout_session(request):
     except Exception as e:
         return Response({ 'error':str(e)}, status=400)
 
+@api_view(['GET'])
+def get_orders(request):
+    email = request.query_params.get("email")
+    orders = Order.objects.filter(customer_email=email)
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
 
