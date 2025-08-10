@@ -2,28 +2,45 @@ import React from "react";
 import Link from "next/link";
 import { FaCartShopping } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 
 interface Props{
     mobile?: boolean
+    LoggedInUser:{ 
+        name : string;
+        email : string;
+        image : string;
+      
+      }
 }
 
-const NavItems = ({mobile} : Props) => {
+const NavItems = ({mobile , LoggedInUser} : Props) => {
   return (
     <div className={cn("flex items-center justify-center gap-6", mobile ? "flex-col" : "flex-row")}>
-      <div className="w-[50px] h-[50px] rounded-full overflow-hidden border-2 border-black shadow-md">
+      {LoggedInUser ? <>
+       
+      <div className="w-[40px] h-[40px] rounded-full overflow-hidden shadow-md">
         {/* Profile picture container */}
+        <Image src={LoggedInUser.image} alt="profile" width={40} height={40} className="object-cover w-full h-full" />
       </div>
 
       <Link
         href="/profile"
         className="text-lg font-medium text-gray-900 hover:text-gray-700 transition"
       >
-        Clinton
+        {LoggedInUser.name}
       </Link>
 
       <button className="nav-btn">Logout</button>
-      <button className="nav-btn">Login</button>
+
+
+</>
+
+:
+      <Link href="/signin" className="nav-btn">Login</Link>
+
+}
 
       <div className="relative flex items-center h-[60px] w-[60px] justify-center cursor-pointer">
         <FaCartShopping className="text-4xl" />

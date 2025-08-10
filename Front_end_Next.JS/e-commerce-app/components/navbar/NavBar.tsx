@@ -7,7 +7,14 @@ import SearchButton from "./SearchButton";
 import NavItems from "./NavItems";
 import MobileNavbar from "./MobileNavbar";
 
-const NavBar = () => {
+interface User{
+    LoggedInUser :{
+        name : string;
+        email : string;
+        image : string;
+    }
+}
+const NavBar = ({LoggedInUser} : User) => {
   const [showSearchForm, setShowSearchForm] = useState(false);
 
   const handleSearch = () => {
@@ -32,7 +39,7 @@ const NavBar = () => {
           </div>
 
           <div className="max-md:hidden">
-                <NavItems />
+                <NavItems LoggedInUser = {LoggedInUser}/>
           </div>
 
           <div className="max-md:block hidden">
