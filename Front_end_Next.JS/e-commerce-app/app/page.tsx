@@ -8,7 +8,7 @@ const page = () => {
     <>
       <Hero />
       <CategorySection />
-      <ProductSection title={''}  />
+      <ProductSection title="Featured Products"  />
     </>
   )
 }
