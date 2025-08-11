@@ -8,7 +8,14 @@ import {
 import { FaHamburger } from "react-icons/fa";
 import NavItems from "./NavItems";
 
-const MobileNavbar = () => {
+interface Props {
+  LoggedInUser :{
+     name : string;
+        email : string;
+        image : string;
+  }
+}
+const MobileNavbar = ({LoggedInUser} : Props) => {
   return (
     <Sheet>
       <SheetTrigger>
@@ -21,7 +28,7 @@ const MobileNavbar = () => {
           </SheetTitle>
         </SheetHeader>
 
-        <NavItems mobile/>
+        <NavItems mobile LoggedInUser = {LoggedInUser}/>
 
         {/* <SheetClose className="overflow-y-auto">
           <NavItems mobile />
