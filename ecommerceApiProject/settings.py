@@ -143,11 +143,7 @@ STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
 CORS_ALLOWED_ORIGINS = [
-"https://domain.com",
-"https://api.domain.com",
-"http://localhost:5173",
-"http://localhost:5174",
-"http://localhost:5175",
-"http://127.0.0.1:5173",
-"http://127.0.0.1:9000"
+"http://localhost:3000",
+"http://localhost:3001",
+"http://localhost:3002",
 ]
