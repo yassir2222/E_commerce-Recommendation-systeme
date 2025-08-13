@@ -18,10 +18,10 @@ const CategoryPage = () => {
 
 
         <div className='flex-center flex-wrap my-6 gap-4'>
+            {/* <ProductCard />
             <ProductCard />
             <ProductCard />
-            <ProductCard />
-            <ProductCard />
+            <ProductCard /> */}
         </div>
 
 
