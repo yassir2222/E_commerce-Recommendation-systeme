@@ -52,7 +52,7 @@ const ReviewCard = ({review, LoggedInUser} : {review : Review, LoggedInUser:User
 
           <div className="flex gap-1 mt-2">
             {starArray.map((star) => (
-              <Star key={star} className={cn("size-5 cursor-pointer fill-black", star<=review.rating ? "fill-black" : "") }/>
+              <Star key={star} className={cn("size-5 cursor-pointer ", star<=review.rating ? "fill-black" : "") }/>
             ))}
           </div>
 
