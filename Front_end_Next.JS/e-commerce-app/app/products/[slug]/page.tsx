@@ -24,6 +24,7 @@ const good_rating = product.good_review
 const very_good_rating = product.very_good_review
 const excellenet_rating = product.excellenet_review
 
+const reviews = product.reviews
   return (
     <>
       <ProductInfo product={product}/>
@@ -75,7 +76,7 @@ const excellenet_rating = product.excellenet_review
         {/* Review modal form ends */}
       </div>
 
-      <ReviewCardContainer />
+      {reviews.length >0  && <ReviewCardContainer reviews={reviews} />}
       <ProductSection title="Products from the same category" />
     </>
   );
