@@ -5,12 +5,13 @@ import { Product } from "@/lib/type";
 
 interface Props{
   title: string
+  similar_products :Product[]
+  detailPage?: boolean
 }
 
-const ProductSection =  async ({title}: Props) => {
+const ProductSection =  async ({title, similar_products,detailPage}: Props) => {
 
   const products = await getProducts()
-  console.log(products)
   return (
     <section className="main-max-width padding-x mx-auto my-16">
       <h2 className="my-9 text-center text-xl font-bold text-gray-800">

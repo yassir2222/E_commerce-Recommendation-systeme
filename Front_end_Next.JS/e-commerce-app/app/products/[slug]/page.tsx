@@ -24,6 +24,8 @@ const good_rating = product.good_review
 const very_good_rating = product.very_good_review
 const excellenet_rating = product.excellenet_review
 
+const similar_products = product.similar_products
+
 const reviews = product.reviews
   return (
     <>
@@ -77,7 +79,7 @@ const reviews = product.reviews
       </div>
 
       {reviews.length >0  && <ReviewCardContainer reviews={reviews} />}
-      <ProductSection title="Products from the same category" />
+      <ProductSection title="Products from the same category" product={similar_products} />
     </>
   );
 };
