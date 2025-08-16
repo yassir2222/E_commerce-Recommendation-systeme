@@ -15,7 +15,7 @@ interface Props {
   updateReviewModal?: boolean;
 }
 
-const Modal = ({ children, userHaveReview = false, updateReviewModal = false }: Props) => {
+export const Modal = ({ children, userHaveReview = false, updateReviewModal = false }: Props) => {
   // Cache seulement le bouton "ajouter" si l'utilisateur a déjà un avis
   if (userHaveReview && !updateReviewModal) {
     return null;

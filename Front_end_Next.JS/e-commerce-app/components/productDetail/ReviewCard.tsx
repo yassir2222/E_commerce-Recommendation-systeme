@@ -5,10 +5,34 @@ import Image from "next/image";
 import React from "react";
 import Modal from "../uiComponents/Modal";
 import ReviewForm from "./ReviewForm";
+import DeleteModal from "../uiComponents/DeleteModal";
+import { deleteReviewAction } from "@/lib/action";
+import { toast } from "react-toastify";
 
 const ReviewCard = ({review, LoggedInUser, product} : {review : Review, LoggedInUser:User | undefined | null, product:ProductDetails}) => {
   const starArray = [1, 2, 3, 4, 5];
   const loggedInUserEmail = LoggedInUser?.email
+
+  async function handleDeleteReview() {
+    const formData = new FormData();
+    formData.set("review_id", String(review.id));
+    formData.set("slug", product.slug);
+    try{
+      await deleteReviewAction(formData)
+      toast.success("Review deleted successfully!")
+    }
+    catch(err: unknown){
+      if(err instanceof Error){
+          toast.error(err.message)
+          throw new Error(err.message)
+      }
+          toast.error("an unkown error occured!")
+
+          throw new Error("an unkown error occured!")
+
+    }
+
+  }
 
   return (
     <div className="w-full bg-white shadow-lg px-6 py-6 rounded-lg flex flex-col gap-4 mb-6">
@@ -17,10 +41,7 @@ const ReviewCard = ({review, LoggedInUser, product} : {review : Review, LoggedIn
         {LoggedInUser?.email == review.user.email && <span className="flex gap-4">
           <>
             {/* Trash button to delete review */}
-            <button className="bg-gray-200 p-2 rounded-md cursor-pointer transition-all hover:bg-gray-300">
-              <TrashIcon className="size-5 text-gray-600" />
-            </button>
-
+            <DeleteModal handleDeleteReview={handleDeleteReview} ></DeleteModal>
             {/* Pen button to edit review */}
 
             <Modal updateReviewModal>

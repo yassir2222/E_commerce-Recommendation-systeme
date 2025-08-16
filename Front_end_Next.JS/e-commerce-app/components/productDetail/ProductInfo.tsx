@@ -1,10 +1,67 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
 import Image from "next/image"
 import Button from '../uiComponents/Button'
 import { ProductDetails } from '@/lib/type'
-import { BASE_URL } from '@/lib/api'
+import { api, BASE_URL } from '@/lib/api'
+import { useCart } from '../context/CartContext'
+import { addToCartAction } from '@/lib/action'
+import { toast } from 'react-toastify'
 
 const ProductInfo = ({product}: {product: ProductDetails}) => {
+  const {cartCode ,setcartItemsCount } = useCart()
+  const [addToCartLoader , setAddToCartLoader] = useState(false)
+  const [addedToCart , setaddedToCart] = useState(false)
+
+  useEffect(() => {
+    async function handleAddedToCart() {
+      try{
+        const response = await api.get(`product_in_cart?cart_code=${cartCode}&product_id=${product.id}`)
+        setaddedToCart(response.data.product_in_cart)
+        return response.data
+      }
+      catch (err: unknown){
+        if (err instanceof Error) {
+            throw new Error(err.message);
+        }
+        throw new Error("an unknown error occured");
+    }
+    }
+
+    handleAddedToCart()
+  } , [cartCode , product.id])
+
+  async function handleAddToCart() {
+    const formData = new FormData();
+    formData.set("cart_code",cartCode ? cartCode : "")
+    formData.set("product_id",String(product.id))
+
+    try{
+      const response = await addToCartAction(formData)
+      setaddedToCart(true)
+      setcartItemsCount(curr => curr +1)
+      toast.success("Item added to cart ! ")
+      return response
+        }
+    catch (err: unknown){
+    if (err instanceof Error) {
+          throw new Error(err.message);
+        }
+    throw new Error("an unknown error occured");    
+
+    }
+
+    finally{
+      setAddToCartLoader(false)
+    }
+
+
+}
+
+  
+
+
   return (
     <div className="bg-gray-50 padding-x py-10 flex items-start flex-wrap gap-12 main-max-width padding-x mx-auto">
       {/* Product Image */}
@@ -37,8 +94,8 @@ const ProductInfo = ({product}: {product: ProductDetails}) => {
 
         {/* Buttons */}
         <div className='flex py-3 items-center gap-4 flex-wrap border'>
-            <Button className="default-btn">
-                Add to Cart
+            <Button disabled={addToCartLoader || addedToCart} handleClick = {handleAddToCart} className="default-btn disabled:opacity-50 cursor-not-allowed">
+                { addToCartLoader ? "Adding to cart ..." : addedToCart ? "Added To cart ":"Add to Cart"}
             </Button>
 
             <Button className="wish-btn">

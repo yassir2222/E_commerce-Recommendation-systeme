@@ -4,6 +4,7 @@ import "./globals.css";
 import Footer from "@/components/footer/Footer";
 import NavBarContainer from "@/components/navbar/NavBarContainer";
 import {ToastContainer } from 'react-toastify'
+import { CartProvider } from "@/components/context/CartContext";
 
 
 const ubuntu = Ubuntu({
@@ -25,10 +26,12 @@ export default function RootLayout({
     <html lang="en" className={ubuntu.className}>
       <body className="">
         <main className="w-full">
+          <CartProvider>
           <NavBarContainer />
           <ToastContainer />
           {children}
           <Footer />
+          </CartProvider>
         </main>
       </body>
     </html>
