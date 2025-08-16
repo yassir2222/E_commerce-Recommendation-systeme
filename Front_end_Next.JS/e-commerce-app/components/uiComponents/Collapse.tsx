@@ -9,12 +9,20 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { Review } from "@/lib/type"
+import { Product, Review ,ProductDetails} from "@/lib/type"
 import ReviewCard from "../productDetail/ReviewCard"
 import { User } from "next-auth"
 
-export function CollapsibleDemo({reviews, LoggedInUser} : {reviews : Review[], LoggedInUser:User | undefined | null}) {
+export function CollapsibleDemo({
+  reviews,
+  LoggedInUser,
+  product
+}: { reviews: Review[]; LoggedInUser: any; product: ProductDetails }) {
   const [isOpen, setIsOpen] = React.useState(false)
+
+  if (!reviews || reviews.length === 0) {
+    return <p className="text-sm text-gray-500 px-4">No reviews yet.</p>
+  }
 
   return (
     <Collapsible
@@ -23,7 +31,9 @@ export function CollapsibleDemo({reviews, LoggedInUser} : {reviews : Review[], L
       className="flex flex-col gap-2"
     >
       <div className="flex items-center justify-between gap-4 px-4">
-              <h4 className="my-4 font-semibold">{reviews.length < 2? "Review": "Reviews" } ({reviews.length})</h4>
+        <h4 className="my-4 font-semibold">
+          {reviews.length < 2 ? "Review" : "Reviews"} ({reviews.length})
+        </h4>
 
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="icon" className="size-8">
@@ -32,10 +42,25 @@ export function CollapsibleDemo({reviews, LoggedInUser} : {reviews : Review[], L
           </Button>
         </CollapsibleTrigger>
       </div>
-      {!isOpen && <ReviewCard key={reviews[0].id} review={reviews[0]} LoggedInUser={LoggedInUser} />}
-      <CollapsibleContent className="flex flex-col gap-2">
-             {reviews.map((review) => <ReviewCard key={review.id} review={review} LoggedInUser={LoggedInUser} />)}
 
+      {!isOpen && reviews[0] && (
+        <ReviewCard
+          key={reviews[0].id}
+          review={reviews[0]}
+          LoggedInUser={LoggedInUser}
+          product={product}
+        />
+      )}
+
+      <CollapsibleContent className="flex flex-col gap-2">
+        {reviews.map((review) => (
+          <ReviewCard
+            key={review.id}
+            review={review}
+            LoggedInUser={LoggedInUser}
+            product={product}
+          />
+        ))}
       </CollapsibleContent>
     </Collapsible>
   )

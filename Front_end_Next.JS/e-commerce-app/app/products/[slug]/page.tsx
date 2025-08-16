@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import ProductSection from "@/components/home/ProductSection";
 import ProductInfo from "@/components/productDetail/ProductInfo";
 import RatingProgressBar from "@/components/productDetail/RatingProgressBar";
@@ -6,6 +7,7 @@ import ReviewForm from "@/components/productDetail/ReviewForm";
 import Modal from "@/components/uiComponents/Modal";
 import { getProduct } from "@/lib/api";
 import { Star } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const ProductPage = async ({params}: {params: Promise<{slug: string}>}) => {
@@ -25,8 +27,12 @@ const very_good_rating = product.very_good_review
 const excellenet_rating = product.excellenet_review
 
 const similar_products = product.similar_products
-
 const reviews = product.reviews
+
+const session = await auth()
+const LoggedInUser = session?.user;
+const LoggedInUserEmail = LoggedInUser?.email
+const userHaveReview = reviews.some((review: { user: { email: string | null | undefined; }; }) => review.user.email === LoggedInUserEmail)
   return (
     <>
       <ProductInfo product={product}/>
@@ -70,16 +76,23 @@ const reviews = product.reviews
         {/* Review modal form */}
 
         <div className="flex justify-center items-center w-full mb-5">
-          <Modal>
-            <ReviewForm />
+          {LoggedInUser ?
+            <Modal userHaveReview={userHaveReview}>
+            <ReviewForm review={undefined} product={product} LoggedInUserEmail={LoggedInUserEmail} />
           </Modal>
+        :
+        <Link href="/signin" className="default-btn max-sm:text-[12px] max-sm:px-4 my-6">
+signin to add a review
+</Link>  
+        
+        }
         </div>
 
         {/* Review modal form ends */}
       </div>
 
-      {reviews.length >0  && <ReviewCardContainer reviews={reviews} />}
-      <ProductSection title="Products from the same category" product={similar_products} />
+      {reviews.length >0  && <ReviewCardContainer reviews={reviews} product={product} />}
+      <ProductSection title="Products from the same category" similar_products={similar_products} />
     </>
   );
 };

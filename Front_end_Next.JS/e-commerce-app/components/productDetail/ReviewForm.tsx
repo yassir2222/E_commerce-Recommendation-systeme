@@ -2,16 +2,25 @@
 
 import { Star } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../uiComponents/Button";
 import { cn } from "@/lib/utils";
+import { Product, ProductDetails, Review } from "@/lib/type";
+import { api } from "@/lib/api";
+import {toast} from 'react-toastify'
+
 
 interface Props {
   rating: number;
   review: string;
 }
 
-const ReviewForm = () => {
+const ReviewForm = ({product,LoggedInUserEmail,review,updateReviewForm}: {product: ProductDetails, LoggedInUserEmail: string | null | undefined, review: Review | undefined , updateReviewForm?:boolean}) => {
+  const { rating = 0, review: reviewMessage = "" } = review || {};
+  const {id , slug } = product
+  const [customerReview , setCustomerReview] = useState("")
+  const [reviewBtnLoader , setReviewButtonLoader] = useState(false)
+
   const [hoverRating, setHoverRating] = useState(0);
   const [hoverReview, setHoverReview] = useState("");
 
@@ -40,6 +49,50 @@ const ReviewForm = () => {
     { rating: 4, review: "Very Good" },
     { rating: 5, review: "Excellent" },
   ];
+
+  useEffect(() => {
+    if(updateReviewForm && review){
+      const { rating , review: reviewMessage} = review
+      setClickedRating(rating)
+      setCustomerReview(reviewMessage)
+
+      const ratingTag = ratings.find((r) => r.rating === rating);
+      setClickedReview(ratingTag ? ratingTag.review : "");
+    }
+
+
+
+  }, [updateReviewForm ])
+
+  async function handleCreateReview(e: React.FormEvent){
+    e.preventDefault()
+    setReviewButtonLoader(true)
+    const  formData = new FormData();
+    formData.set("product_id", String(id))
+    formData.set("slug", slug)
+    formData.set("review", customerReview)
+    formData.set("rating", String(clickedRating))
+    formData.set("email", String(LoggedInUserEmail))
+
+    try{
+      await createReviewAction(formData)
+      toast.success("Review added successfully !")
+    }
+
+    catch(err:unknown){
+      if(err instanceof Error){
+        toast.error(err.message)
+        throw new Error(err.message)
+      }
+        toast.error("An unknown error occured")
+        throw new Error("An unknown error occured")
+    }
+
+    finally{
+      setReviewButtonLoader(false)
+    }
+
+  }
 
   return (
     <div className="w-full mx-auto bg-white rounded-xl p-6">
@@ -71,16 +124,19 @@ const ReviewForm = () => {
 
       {/* Review Form */}
 
-      <form className="flex flex-col gap-4 mt-4">
+      <form className="flex flex-col gap-4 mt-4" onSubmit={handleCreateReview}>
         <Textarea
           name="content"
+          value={customerReview}
+          onChange={(e) => setCustomerReview(e.target.value)}
           className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-300 rounded-lg p-3 w-full resize-none"
           placeholder="Write your review..."
           required
         />
 
-        <Button className="bg-black text-white w-full py-2 rounded-lg hover:bg-gray-900 transition">
-          Add Review
+        <Button disabled={ clickedRating < 1 || ( customerReview && customerReview.trim()).length == 0 || reviewBtnLoader} className="bg-black text-white w-full py-2 rounded-lg hover:bg-gray-900 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+          { reviewBtnLoader ? "Adding review.." : "Add Review "}
+          { updateReviewForm ? reviewBtnLoader ?  "Updating review ...": "Update Review" : reviewBtnLoader ? "Adding Review ..." : "Add Review" }
         </Button>
       </form>
     </div>
@@ -88,3 +144,25 @@ const ReviewForm = () => {
 };
 
 export default ReviewForm;
+async function createReviewAction(formData: any) {
+    const product_id = Number( formData.get("product_id"))
+    const slug =  formData.get("slug")
+    const review = formData.get("review")
+    const rating = Number( formData.get("rating"))
+    const email = formData.get("email")
+
+    if(!product_id || !email || !rating || !review || !slug ){
+        throw new Error("All fields are required")
+    }
+    const payload = {
+    product_id: product_id,
+    slug: slug,
+    review: review,
+    rating: rating,
+    email: email,
+  };
+    const res = await api.post("add_review/", payload);
+
+return res.data;
+  }
+

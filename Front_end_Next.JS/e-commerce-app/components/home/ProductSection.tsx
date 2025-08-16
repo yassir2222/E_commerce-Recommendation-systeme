@@ -11,7 +11,7 @@ interface Props{
 
 const ProductSection =  async ({title, similar_products,detailPage}: Props) => {
 
-  const products = await getProducts()
+  const products = detailPage ? similar_products :  await getProducts()
   return (
     <section className="main-max-width padding-x mx-auto my-16">
       <h2 className="my-9 text-center text-xl font-bold text-gray-800">

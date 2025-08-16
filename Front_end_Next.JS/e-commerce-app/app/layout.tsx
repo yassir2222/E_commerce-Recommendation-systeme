@@ -3,6 +3,7 @@ import { Ubuntu } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/footer/Footer";
 import NavBarContainer from "@/components/navbar/NavBarContainer";
+import {ToastContainer } from 'react-toastify'
 
 
 const ubuntu = Ubuntu({
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className="">
         <main className="w-full">
           <NavBarContainer />
+          <ToastContainer />
           {children}
           <Footer />
         </main>
