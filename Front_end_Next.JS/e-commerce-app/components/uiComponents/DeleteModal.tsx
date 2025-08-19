@@ -9,28 +9,44 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { TrashIcon } from "lucide-react"
+import { TrashIcon, X } from "lucide-react"
 
-const DeleteModal = ({handleDeleteReview}: {handleDeleteReview: () => void}) =>{
+const DeleteModal = ({handleDeleteReview, handleDeleteCartitem,deleteCartitem}: {handleDeleteReview: () => void , handleDeleteCartitem?: ()=> void , deleteCartitem ? : boolean}) =>{
 return(
     <AlertDialog>
     <AlertDialogTrigger asChild>
-
-    <button className="bg-gray-200 p-2 rounded-md cursor-pointer transition-all hover:bg-gray-300">
+        {deleteCartitem ? 
+     <button 
+          className="p-2 rounded-md bg-red-50 hover:bg-red-100 transition text-red-500 border border-red-300"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        :
+       <button className="bg-gray-200 p-2 rounded-md cursor-pointer transition-all hover:bg-gray-300">
     <TrashIcon className="size-5" />
-    </button>
+    </button>   
+    }
+
+    
 
     </AlertDialogTrigger>
     <AlertDialogContent>
         <AlertDialogHeader>
         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+        {deleteCartitem ? 
         <AlertDialogDescription>
+            You are about to delete  this cartitem
+        </AlertDialogDescription>
+        :
+         <AlertDialogDescription>
             This action cannot be undone. This will permanently delete the review on this product
         </AlertDialogDescription>
+        
+    }
         </AlertDialogHeader>
         <AlertDialogFooter>
         <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
-        <AlertDialogAction className="cursor-pointer" onClick={handleDeleteReview}>Continue</AlertDialogAction>
+        <AlertDialogAction className="cursor-pointer" onClick={deleteCartitem ? handleDeleteCartitem: handleDeleteReview}>Continue</AlertDialogAction>
         </AlertDialogFooter>
     </AlertDialogContent>
     </AlertDialog>

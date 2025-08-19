@@ -6,12 +6,13 @@ import Button from '../uiComponents/Button'
 import { CartitemType } from '@/lib/type'
 import { BASE_URL } from '@/lib/api'
 import { useCart } from '../context/CartContext'
-import { updateCartitemAction } from '@/lib/action'
+import { deleteCartitemAction, updateCartitemAction } from '@/lib/action'
 import { toast } from 'react-toastify'
+import DeleteModal from '../uiComponents/DeleteModal'
 
 const CartItem = ({cartitem}: {cartitem: CartitemType}) => {
 
-  const { cartCode} = useCart()
+  const { cartCode , setcartItemsCount} = useCart()
 
   const sub_total = Number(cartitem.sub_total);
   const formattedSubtotal = sub_total.toFixed(2)
@@ -34,7 +35,7 @@ const CartItem = ({cartitem}: {cartitem: CartitemType}) => {
     formData.set("quantity", String(quantity))
     formData.set("cartitem_id", String(cartitem.id))
     formData.set("cart_code", cartCode?cartCode:'')
-    console.log("id+ "+String(cartitem.id))
+    
     try{
       await updateCartitemAction(formData)
       toast.success(`Item - ${cartitem.product.name}'s quantity has been updated !`)
@@ -50,6 +51,28 @@ const CartItem = ({cartitem}: {cartitem: CartitemType}) => {
     finally{
       setCartitemUpdateLoader(false)
     }
+
+  }
+
+  async function handleDeleteCartitem(){
+    const formData = new FormData();
+    formData.set("cartitem_id", String(cartitem.id))
+    formData.set("cart_code", cartCode?cartCode:'')
+    
+    try{
+      await deleteCartitemAction(formData)
+      setcartItemsCount(curr => curr - cartitem.quantity)
+      toast.success(`Cartitem - ${cartitem.product.name}  has been deleted !`)
+    }
+    catch(err:unknown){
+      if(err instanceof Error){
+        toast.error(err.message)
+        throw new Error(err.message)
+      }
+      throw new Error("An unknown error ")
+
+    }
+    
 
   }
 
@@ -100,13 +123,15 @@ const CartItem = ({cartitem}: {cartitem: CartitemType}) => {
     
         {/* Subtotal Price */}
         <p className="text-lg font-semibold text-gray-800">{formattedSubtotal}</p>
-    
+      <DeleteModal deleteCartitem handleDeleteCartitem={handleDeleteCartitem} handleDeleteReview={function (): void {
+        throw new Error('Function not implemented.')
+      } }></DeleteModal>
         {/* Remove Item Button */}
-        <button 
+       {/*  <button 
           className="p-2 rounded-md bg-red-50 hover:bg-red-100 transition text-red-500 border border-red-300"
         >
           <X className="w-5 h-5" />
-        </button>
+        </button> */}
     
         {/* Update Cart Button */}
         <Button className='update-item-btn' disabled={cartitemUpdateLoader} handleClick={handleUpdateCartitem}>
@@ -118,3 +143,6 @@ const CartItem = ({cartitem}: {cartitem: CartitemType}) => {
 }
 
 export default CartItem
+
+
+
