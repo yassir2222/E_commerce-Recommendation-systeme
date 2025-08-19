@@ -1,13 +1,39 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import Button from '../uiComponents/Button'
+import { useCart } from '../context/CartContext'
+import { initiatePayment } from '@/lib/api'
 
-const CartSummary = ({total} : {total: number}) => {
+const CartSummary = ({total , loggedInUserEmail} : {total: number , loggedInUserEmail:string |null |undefined}) => {
   const tax = 5
   const sub_total = Number(total)
   const cart_total = (tax + sub_total).toFixed(2)
 
   const formattedTax = tax.toFixed(2)
   const formattedSubtotal = sub_total.toFixed(2)
+  const { cartCode } = useCart()
+  const [initiatePaymentLoader, setInitiatePaymentLoader] = useState(false)
+  
+  async function handleInitiatePayment(){
+    const paymentInfo = { email: loggedInUserEmail, cart_code: cartCode }
+    setInitiatePaymentLoader(true)
+    try{
+      const response = await initiatePayment(paymentInfo)
+      window.location.href = response.data.url
+      console.log(response)
+    }catch(err:unknown){
+        if(err instanceof Error){
+           
+
+            throw new Error(err.message)
+        }
+         throw new Error("an unknown error occured")
+    }
+    finally{
+      setInitiatePaymentLoader(false)
+    }
+}
+  
   return (
     <div className="w-[400px] max-lg:w-full border border-gray-200 rounded-lg shadow-md bg-white px-8 py-6">
     <h2 className="font-semibold text-2xl text-gray-800 mb-6">Order Summary</h2>
@@ -31,8 +57,8 @@ const CartSummary = ({total} : {total: number}) => {
 
   
 
-    <Button className='checkout-btn'>
-    Proceed to Checkout
+    <Button className='checkout-btn' handleClick={handleInitiatePayment} disabled={!Boolean(loggedInUserEmail) || total < 5 || initiatePaymentLoader}>
+    {loggedInUserEmail ?  initiatePaymentLoader ? "Redirecting to Stripe" : "Proceed to Checkout" : "please Login to Checkout"}
     </Button>
 
   </div>
