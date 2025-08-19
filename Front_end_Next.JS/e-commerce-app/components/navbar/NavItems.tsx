@@ -19,7 +19,8 @@ interface Props{
 
 const NavItems = ({mobile , LoggedInUser} : Props) => {
 
-  const {cartItemsCount} = useCart()
+const {cartItemsCount , cartCode} = useCart()
+
   return (
     <div className={cn("flex items-center justify-center gap-6", mobile ? "flex-col" : "flex-row")}>
       {LoggedInUser ? <>
@@ -41,11 +42,12 @@ const NavItems = ({mobile , LoggedInUser} : Props) => {
 
 </>
 
-:
+:(
       <Link href="/signin" className="nav-btn">Login</Link>
 
-}
+)}
 
+      <Link href={`/cart/${cartCode}`} >
       <div className="relative flex items-center h-[60px] w-[60px] justify-center cursor-pointer">
         <FaCartShopping className="text-4xl" />
 
@@ -53,6 +55,7 @@ const NavItems = ({mobile , LoggedInUser} : Props) => {
           {cartItemsCount}
         </span>}
       </div>
+      </Link>
     </div>
   );
 };

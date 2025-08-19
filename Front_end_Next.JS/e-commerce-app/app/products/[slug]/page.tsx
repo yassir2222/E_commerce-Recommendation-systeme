@@ -35,7 +35,7 @@ const LoggedInUserEmail = LoggedInUser?.email
 const userHaveReview = reviews.some((review: { user: { email: string | null | undefined; }; }) => review.user.email === LoggedInUserEmail)
   return (
     <>
-      <ProductInfo product={product}/>
+      <ProductInfo product={product} LoggedInUserEmail ={LoggedInUserEmail}/>
 
       <div className="main-max-width padding-x mx-auto">
         <h3 className="font-semibold text-xl text-center my-6 text-gray-800">

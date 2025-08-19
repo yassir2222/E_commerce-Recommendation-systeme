@@ -107,7 +107,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
 
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = ProductDetailSerializer(read_only=True)
+    product = ProductListSerializer(read_only=True)
     sub_total = serializers.SerializerMethodField()
     class Meta:
       model = CartItem

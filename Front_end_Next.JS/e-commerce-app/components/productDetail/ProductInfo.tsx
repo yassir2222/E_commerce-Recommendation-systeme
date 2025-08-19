@@ -6,13 +6,17 @@ import Button from '../uiComponents/Button'
 import { ProductDetails } from '@/lib/type'
 import { api, BASE_URL } from '@/lib/api'
 import { useCart } from '../context/CartContext'
-import { addToCartAction } from '@/lib/action'
+import { addToCartAction, addToWishlistAction } from '@/lib/action'
 import { toast } from 'react-toastify'
+import WishlistTooltip from '../uiComponents/WishlistTooltip'
+import { constants } from 'buffer'
 
-const ProductInfo = ({product}: {product: ProductDetails}) => {
+const ProductInfo = ({product , LoggedInUserEmail}: {product: ProductDetails , LoggedInUserEmail:string | null |undefined}) => {
   const {cartCode ,setcartItemsCount } = useCart()
   const [addToCartLoader , setAddToCartLoader] = useState(false)
+  const [ addedToWishlist , setAddedToWishlist] = useState(false)
   const [addedToCart , setaddedToCart] = useState(false)
+  const [addWishlistLoader , setAddWishlistLoader] = useState(false)
 
   useEffect(() => {
     async function handleAddedToCart() {
@@ -59,7 +63,53 @@ const ProductInfo = ({product}: {product: ProductDetails}) => {
 
 }
 
-  
+  async function handleAddToWishlist() {
+    setAddWishlistLoader(true)
+    const formData = new FormData();
+    formData.set("email", LoggedInUserEmail ? LoggedInUserEmail : "")
+    formData.set("product_id",String(product.id))
+    try{
+      const response = await addToWishlistAction(formData)
+      setAddedToWishlist(curr => !curr)
+      toast.success("Your wishlist has been updated ")
+      return response
+        }
+    catch (err: unknown){
+    if (err instanceof Error) {
+          throw new Error(err.message);
+        }
+    throw new Error("an unknown error occured");    
+
+    }
+    finally{
+      setAddWishlistLoader(false)
+    }
+
+   
+
+
+}
+
+
+  useEffect(() =>{
+    async function handleProductInWishlist(){
+      if(LoggedInUserEmail){
+        try{
+          const response = await api.get(`product_in_wishlist?email=${LoggedInUserEmail}&product_id=${product.id}`)
+          setAddedToWishlist(response.data.product_in_wishlist)
+          return response.data
+        }
+         catch (err: unknown){
+    if (err instanceof Error) {
+          throw new Error(err.message);
+        }
+    throw new Error("an unknown error occured");    
+
+    }
+      }
+    }
+    handleProductInWishlist()
+  },[LoggedInUserEmail , product.id])
 
 
   return (
@@ -98,9 +148,16 @@ const ProductInfo = ({product}: {product: ProductDetails}) => {
                 { addToCartLoader ? "Adding to cart ..." : addedToCart ? "Added To cart ":"Add to Cart"}
             </Button>
 
-            <Button className="wish-btn">
-                Add to Wishlist
-            </Button>
+            {LoggedInUserEmail ?  (<Button handleClick={handleAddToWishlist} disabled={addWishlistLoader} className="wish-btn disabled:opacity-50 disabled:cursor-not-allowed">
+              {addedToWishlist 
+              ? addWishlistLoader 
+              ? "Updating..." 
+              : "Remove from Wishlist" 
+              : addWishlistLoader 
+              ? "Updating ... " 
+              : "Add to Wishlist"}
+            </Button> ): (
+            <WishlistTooltip LoggedInUserEmail={LoggedInUserEmail} /> )}
         </div>
         
       </div>
