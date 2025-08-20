@@ -28,8 +28,8 @@ SECRET_KEY = "django-insecure-*t++4iit07=@1br@akp-vfvbpt92=85%cr_9#mzo8e3er8h%-$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["68008c46b329.ngrok-free.app","127.0.0.1","localhost"]
+CSRF_TRUSTED_ORIGINS = ["https://68008c46b329.ngrok-free.app"]
 
 # Application definition
 
@@ -125,7 +125,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images).
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
@@ -141,7 +141,7 @@ AUTH_USER_MODEL = "apiApp.CustomUser"
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
-
+WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
 CORS_ALLOWED_ORIGINS = [
 "http://localhost:3000",
 "http://localhost:3001",

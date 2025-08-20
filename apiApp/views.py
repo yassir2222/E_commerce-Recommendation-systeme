@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 User = get_user_model()
 stripe.api_key = settings.STRIPE_SECRET_KEY
-endpoint_secret = ""
+endpoint_secret = settings.WEBHOOK_SECRET
 @api_view(["GET"])
 def product_list(request):
     products = Product.objects.filter(featured=True)
@@ -186,7 +186,7 @@ def create_checkout_session(request):
                     'price_data':{
                         'currency': 'usd',
                         'product_data': {'name':item.product.name},
-                        'unit_amount' : int(item.product.price)*100,
+                        'unit_amount' : int(item.product.price*100),
                     },
                     'quantity' : item.quantity,
 
@@ -194,8 +194,10 @@ def create_checkout_session(request):
                 for item in cart.cartitems.all()
             ],
             mode='payment',
-            success_url="http://localhost:8008/sucess",
-            cancel_url="http://localhost:8008/cancel" ,
+            metadata={'cart_code': cart_code},  # Add this line!
+
+            success_url="http://localhost:3000/success",
+            cancel_url="http://localhost:3000/failed" ,
         )
         return Response({ 'data':checkout_session})
 
@@ -240,6 +242,47 @@ def my_webhook_view(request):
 
 
 def fulfill_checkout(session, cart_code):
+    try:
+        print(f"Processing order for cart_code: {cart_code}")
+        
+        # Convert amount from cents to dollars
+        amount = session["amount_total"] / 100
+        
+        order = Order.objects.create(
+            stripe_checkout_id=session["id"],
+            amount=amount,  # Use converted amount
+            currency=session["currency"],
+            customer_email=session["customer_email"],
+            status="Paid"
+        )
+        
+        print(f"Order created with ID: {order.id}")
+
+        if cart_code:  # Check if cart_code exists
+            cart = Cart.objects.get(cart_code=cart_code)
+            cartitems = cart.cartitems.all()
+            
+            print(f"Found {cartitems.count()} items in cart")
+
+            for item in cartitems:
+                orderitem = OrderItem.objects.create(
+                    order=order, 
+                    product=item.product,
+                    quantity=item.quantity
+                )
+                print(f"OrderItem created: {orderitem.id} - {item.product.name} x {item.quantity}")
+
+            cart.delete()
+            print(f"Cart {cart_code} deleted successfully")
+        else:
+            print("No cart_code provided, skipping cart processing")
+            
+    except Cart.DoesNotExist:
+        print(f"Cart with code {cart_code} not found")
+    except Exception as e:
+        print(f"Error in fulfill_checkout: {e}")
+        import traceback
+        traceback.print_exc()
     order = Order.objects.create(stripe_checkout_id=session["id"],
                                  amount=session["amount_total"],
                                  currency=session["currency"],
