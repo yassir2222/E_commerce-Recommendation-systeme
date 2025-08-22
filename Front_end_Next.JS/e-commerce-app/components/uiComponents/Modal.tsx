@@ -8,15 +8,17 @@ import {
 } from "@/components/ui/dialog";
 import Button from "./Button";
 import { PenIcon } from "lucide-react";
+import { AddressType } from "@/lib/type";
 
 interface Props {
   children: React.ReactNode;
   userHaveReview?: boolean;
   updateReviewModal?: boolean;
   addressForm?: boolean;
+  address?: AddressType | undefined
 }
 
-export const Modal = ({ children, userHaveReview = false, updateReviewModal = false ,addressForm = false}: Props) => {
+export const Modal = ({ children, userHaveReview = false, updateReviewModal = false ,addressForm = false, address}: Props) => {
   // Cache seulement le bouton "ajouter" si l'utilisateur a déjà un avis
   if (userHaveReview && !updateReviewModal) {
     return null;
@@ -34,7 +36,7 @@ export const Modal = ({ children, userHaveReview = false, updateReviewModal = fa
               <PenIcon className="size-5 text-gray-600" />
             </button>
           ) : addressForm ? (
-            <Button className="nav-btn">Add Address</Button>
+            <Button className="nav-btn">{address?.city?"Update Address" : "Add Address"}</Button>
           ) : (
             <Button className="default-btn max-sm:text-[12px] max-sm:px-4 my-6">
               Click to add a review
