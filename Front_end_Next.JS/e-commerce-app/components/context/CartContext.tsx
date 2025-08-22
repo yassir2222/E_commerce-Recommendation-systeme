@@ -15,9 +15,7 @@ const CartContext = createContext<CartContextProps | null>(null);
 export function CartProvider({children}: {children: React.ReactNode}) {
   const [cartCode, setCartCode] = useState<string |null>(null);
   const [cartItemsCount, setcartItemsCount] = useState(0)
-  if(cartCode == null){
-        setCartCode(localStorage.getItem("cartcode"))
-  }
+ 
   useEffect(() => {
         async function getCartItemCount() {
             try{

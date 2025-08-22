@@ -1,32 +1,24 @@
+import AddressForm from '@/components/order/AddressForm';
+import AddressFormContainer from '@/components/order/AddressFormContainer';
 import MiniProductCard from '@/components/order/MiniProductCard'
+import OrderContainer from '@/components/order/OrderContainer';
 import PurchasedOrder from '@/components/order/PurchsedOrder'
+import WishlistSection from '@/components/order/WishlistSection';
+import Button from '@/components/uiComponents/Button';
+import Modal from '@/components/uiComponents/Modal';
 import React from 'react'
 
 const ProfilePage = () => {
   return (
     <>
-    <PurchasedOrder />
-    <section className="main-max-width padding-x mx-auto my-10">
-    <h2 className="text-center text-2xl font-bold text-gray-800 mt-2 mb-4 max-sm:text-[16px]">
-        Products added to Wishlist
-    </h2>
-
-    {/* Content */}
-    <div className="flex items-center w-[full] gap-4 px-6 py-6 custom-overflow border border-gray-200 bg-white rounded-lg shadow-sm">
-     
-     <MiniProductCard />
-     <MiniProductCard />
-     <MiniProductCard />
-     <MiniProductCard />
-
-
-    </div>
-  </section>
-
-
-
+      <div className="main-max-width padding-x py-6 flex-center mx-auto">
+        {/* <Button className="address-btn">Add Shipping Address</Button> */}
+        <AddressFormContainer />
+      </div>
+      <OrderContainer />
+      <WishlistSection />
     </>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;
