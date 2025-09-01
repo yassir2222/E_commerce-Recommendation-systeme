@@ -60,7 +60,7 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    cart_code = models.CharField(max_length=11 , unique=True)
+    cart_code = models.CharField(max_length=40 , unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

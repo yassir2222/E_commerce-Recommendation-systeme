@@ -5,8 +5,12 @@ import ProductSectionSkeleton from '@/components/home/ProductSectionSkeleton'
 import Hero from '@/components/home/Hero'
 import ProductSection from '@/components/home/ProductSection'
 import React, { Suspense } from 'react'
+import { auth } from '@/auth'
+import RecommenderSection from '@/components/home/RecommenderSection'
 
-const page = () => {
+const page = async () => {
+  const session = await auth();
+  const userEmail = session?.user?.email ?? null;
   return (
     <>
       <Hero />
@@ -16,6 +20,7 @@ const page = () => {
       <Suspense fallback={<ProductSectionSkeleton />}>
       </Suspense>
       <ProductSection title="Featured Products"  />
+      <RecommenderSection userId={userEmail} />
     </>
   )
 }

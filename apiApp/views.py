@@ -240,8 +240,51 @@ def my_webhook_view(request):
 
   return HttpResponse(status=200)
 
+# In your views.py
 
 def fulfill_checkout(session, cart_code):
+    try:
+        print(f"Processing order for cart_code: {cart_code}")
+        
+        # Convert amount from cents to dollars
+        amount = session["amount_total"] / 100
+        
+        order = Order.objects.create(
+            stripe_checkout_id=session["id"],
+            amount=amount,  # Use converted amount
+            currency=session["currency"],
+            customer_email=session["customer_email"],
+            status="Paid"
+        )
+        
+        print(f"Order created with ID: {order.id}")
+
+        if cart_code:  # Check if cart_code exists
+            cart = Cart.objects.get(cart_code=cart_code)
+            cartitems = cart.cartitems.all()
+            
+            print(f"Found {cartitems.count()} items in cart")
+
+            for item in cartitems:
+                orderitem = OrderItem.objects.create(
+                    order=order, 
+                    product=item.product,
+                    quantity=item.quantity
+                )
+                print(f"OrderItem created: {orderitem.id} - {item.product.name} x {item.quantity}")
+
+            cart.delete()
+            print(f"Cart {cart_code} deleted successfully")
+        else:
+            print("No cart_code provided, skipping cart processing")
+            
+    except Cart.DoesNotExist:
+        print(f"Cart with code {cart_code} not found")
+    except Exception as e:
+        print(f"Error in fulfill_checkout: {e}")
+        import traceback
+        traceback.print_exc()
+
     try:
         print(f"Processing order for cart_code: {cart_code}")
         

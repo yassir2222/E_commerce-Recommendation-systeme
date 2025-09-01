@@ -80,7 +80,7 @@ async function handleAddAddress(e: React.FormEvent<HTMLElement>){
       />
   </div>
 
-  <button type="submit" disabled={disableButton() ||btnLoader} className="w-full h-12 cursor-pointer bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+  <button type="submit" disabled={disableButton() || btnLoader} className="w-full h-12 cursor-pointer bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
     {btnLoader ? "Saving Address...." : address?.city ? "Update Address" : "Save Address"}
   </button>
 
