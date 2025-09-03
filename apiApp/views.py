@@ -91,22 +91,6 @@ def add_review(request):
     return Response(serializer.data)
 
 
-@api_view(["POST"])
-def add_review(request):
-    product_id = request.data.get("product_id")
-    email = request.data.get("email")
-    rating = request.data.get("rating")
-    review_text = request.data.get("review")
-
-    product = Product.objects.get(id=product_id)
-    user = User.objects.get(email=email)
-    if Review.objects.filter(product=product, user=user).exists():
-        return Response({"message": "Review already exists!"})
-
-    review = Review.objects.create(product=product, user=user, rating=rating , review=review_text)
-    serializer = ReviewSerializer(review)
-    return Response(serializer.data)
-
 @api_view(['PUT'])
 def update_review(request, pk):
     review = Review.objects.get(id=pk)
@@ -343,18 +327,8 @@ def fulfill_checkout(session, cart_code):
 
     cart.delete()
 
-@api_view(["POST"])
-def create_user(request):
-    username = request.data.get("username")
-    email = request.data.get("email")
-    first_name = request.data.get("first_name")
-    last_name = request.data.get("last_name")
-    profile_picture_url = request.data.get("profile_picture_url")
 
-    new_user = User.objects.create(username=username, email=email,
-                                       first_name=first_name, last_name=last_name, profile_picture_url=profile_picture_url)
-    serializer = UserSerializer(new_user)
-    return Response(serializer.data)
+
 
 
 @api_view(["GET"])
@@ -455,3 +429,57 @@ def product_in_cart(request):
 
     return Response({'product_in_cart': product_exists_in_cart})
 
+@api_view(["POST"])
+def login(request):
+    email = request.data.get("email")
+    password = request.data.get("password")
+
+    if not email or not password:
+        return Response({"detail": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+
+    if not user.check_password(password):
+        return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+
+    serializer = UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+def create_user(request):
+    try:
+        email = request.data.get("email")
+        username = request.data.get("username") or (email.split("@")[0] if email else None)
+        first_name = request.data.get("first_name") or ""
+        last_name = request.data.get("last_name") or ""
+        password = request.data.get("password")
+        profile_picture_url = request.data.get("profile_picture_url")
+
+        if not email or not password:
+            return Response({"detail": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(email=email).exists():
+            return Response({"detail": "User with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(username=username).exists():
+            return Response({"detail": "Username already taken."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+        )
+
+        if profile_picture_url:
+            user.profile_picture_url = profile_picture_url
+            user.save()
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

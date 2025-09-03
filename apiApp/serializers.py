@@ -142,7 +142,7 @@ class CartStatSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
    class Meta:
       model = get_user_model()
-      fields = ["id","first_name","last_name","profile_picture_url"]
+      fields = ["id","email","first_name","last_name","profile_picture_url"]
 
 class ReviewSerializer(serializers.ModelSerializer):
    user = UserSerializer(read_only=True)
