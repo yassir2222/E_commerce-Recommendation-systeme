@@ -83,28 +83,28 @@ WSGI_APPLICATION = "ecommerceApiProject.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'railway',
-#         'USER': 'postgres',
-#         'PASSWORD': 'ntQqWdNZbyQZzjsDeNdexTvAOsVhrEvY',
-#         'HOST': 'yamanote.proxy.rlwy.net',
-#         'PORT': '30248',
-#         'NAME': 'railway',
-#         },
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecommercedb',
-        'USER': 'yassir',
-        'PASSWORD': 'yassir',
-        'HOST': 'localhost',
-        'PORT': '5433',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'ntQqWdNZbyQZzjsDeNdexTvAOsVhrEvY',
+        'HOST': 'yamanote.proxy.rlwy.net',
+        'PORT': '30248',
+        'NAME': 'railway',
         },
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ecommercedb',
+#         'USER': 'yassir',
+#         'PASSWORD': 'yassir',
+#         'HOST': 'localhost',
+#         'PORT': '5433',
+#         },
+# }
 
 
 
