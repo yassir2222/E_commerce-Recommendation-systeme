@@ -14,7 +14,7 @@ const PaymentError = () => {
           Oops! Payment Failed
         </h1>
         <p className="text-lg md:text-xl text-red-800 max-w-2xl mx-auto">
-          Something went wrong while processing your payment. Don't worry - your order hasn't been charged.
+          Something went wrong while processing your payment. Don&apos;t worry - your order hasn&apos;t been charged.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
           <Link

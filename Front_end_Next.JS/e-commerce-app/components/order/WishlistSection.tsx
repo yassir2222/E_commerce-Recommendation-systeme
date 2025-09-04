@@ -22,7 +22,7 @@ const WishlistSection = async () => {
             Your wishlist is empty
           </h2>
           <p className="text-gray-600 max-w-md">
-            You haven't added any products to your wishlist yet. Start exploring
+            You havent added any products to your wishlist yet. Start exploring
             and save your favorites!
           </p>
         </div>
@@ -40,7 +40,7 @@ const WishlistSection = async () => {
         {wishlists.map((wishlist: WishlistType) => (
           <MiniProductCard
             key={wishlist.id}
-            item={wishlist}
+            item={{ ...wishlist, quantity: 1 }}
           />
         ))}
       </div>

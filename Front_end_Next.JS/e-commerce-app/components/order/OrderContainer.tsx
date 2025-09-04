@@ -27,7 +27,7 @@ if(!session){
             No Orders Yet
           </h2>
           <p className="text-gray-500 max-w-md">
-            Looks like you haven't placed any orders yet. When you do, they'll appear here.
+            Looks like you haven&apos;t placed any orders yet. When you do, they&apos;ll appear here.
           </p>
         </div>
       </div>
@@ -42,7 +42,7 @@ if(!session){
         Your Purchased Orders
       </h2>
       <p className="text-gray-600 mt-2 text-base max-w-md mx-auto">
-        Here are all the items you've successfully ordered. Track them with ease.
+        Here are all the items you&apos;ve successfully ordered. Track them with ease.
       </p>
     </div>
 

@@ -31,7 +31,7 @@ DEBUG = True
 #ALLOWED_HOSTS = ["68008c46b329.ngrok-free.app","127.0.0.1","localhost"]
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ["https://68008c46b329.ngrok-free.app"]
+CSRF_TRUSTED_ORIGINS = ["https://68008c46b329.ngrok-free.app","https://ecommerce-recommendation-systeme.up.railway.app"]
 
 # Application definition
 
@@ -83,28 +83,28 @@ WSGI_APPLICATION = "ecommerceApiProject.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'ntQqWdNZbyQZzjsDeNdexTvAOsVhrEvY',
-        'HOST': 'yamanote.proxy.rlwy.net',
-        'PORT': '30248',
-        'NAME': 'railway',
-        },
-}
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'ecommercedb',
-#         'USER': 'yassir',
-#         'PASSWORD': 'yassir',
-#         'HOST': 'localhost',
-#         'PORT': '5433',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'ntQqWdNZbyQZzjsDeNdexTvAOsVhrEvY',
+#         'HOST': 'yamanote.proxy.rlwy.net',
+#         'PORT': '30248',
+#         'NAME': 'railway',
 #         },
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ecommercedb',
+        'USER': 'yassir',
+        'PASSWORD': 'yassir',
+        'HOST': 'localhost',
+        'PORT': '5433',
+        },
+}
 
 
 
@@ -143,12 +143,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
-STORAGES = {
 
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 STATIC_ROOT = BASE_DIR/'staticfiles'
 MEDIA_URL ='media/'
 

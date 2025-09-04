@@ -1,6 +1,5 @@
 import React from 'react'
-import ReviewCard from './ReviewCard'
-import { ProductDetails, Review ,User } from '@/lib/type'
+import { ProductDetails, Review  } from '@/lib/type'
 import { auth } from '@/auth'
 import { CollapsibleDemo } from '../uiComponents/Collapse'
 const ReviewCardContainer = async  ({reviews, product}: {reviews: Review[] , product:ProductDetails}) => {

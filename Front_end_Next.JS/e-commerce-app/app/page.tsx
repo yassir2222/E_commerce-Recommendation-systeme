@@ -19,7 +19,7 @@ const page = async () => {
       </Suspense>
       <Suspense fallback={<ProductSectionSkeleton />}>
       </Suspense>
-      <ProductSection title="Featured Products"  />
+      <ProductSection title="Featured Products"  similar_products={[]}/>
       <RecommenderSection userId={userEmail} />
     </>
   )

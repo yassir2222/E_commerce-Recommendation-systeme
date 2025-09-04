@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
 import {
   Tooltip,
@@ -5,7 +6,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import Button from './Button'
 
 export const WishlistTooltip = ({LoggedInUserEmail} : {LoggedInUserEmail: string | null |undefined }) => {
   return (

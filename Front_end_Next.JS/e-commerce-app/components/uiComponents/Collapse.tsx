@@ -9,14 +9,14 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { Product, Review ,ProductDetails} from "@/lib/type"
+import { Review ,ProductDetails} from "@/lib/type"
 import ReviewCard from "../productDetail/ReviewCard"
-import { User } from "next-auth"
 
 export function CollapsibleDemo({
   reviews,
   LoggedInUser,
   product
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: { reviews: Review[]; LoggedInUser: any; product: ProductDetails }) {
   const [isOpen, setIsOpen] = React.useState(false)
 

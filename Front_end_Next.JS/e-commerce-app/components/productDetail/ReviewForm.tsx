@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import React, { useEffect, useState } from "react";
 import Button from "../uiComponents/Button";
 import { cn } from "@/lib/utils";
-import { Product, ProductDetails, Review } from "@/lib/type";
+import {  ProductDetails, Review } from "@/lib/type";
 import { api } from "@/lib/api";
 import {toast} from 'react-toastify'
 import { updateReviewAction } from "@/lib/action";
@@ -17,7 +17,6 @@ interface Props {
 }
 
 const ReviewForm = ({product,LoggedInUserEmail,review,updateReviewForm}: {product: ProductDetails, LoggedInUserEmail: string | null | undefined, review: Review | undefined , updateReviewForm?:boolean}) => {
-  const { rating = 0, review: reviewMessage = "" } = review || {};
   const {id , slug } = product
   const [customerReview , setCustomerReview] = useState("")
   const [reviewBtnLoader , setReviewButtonLoader] = useState(false)
@@ -43,6 +42,7 @@ const ReviewForm = ({product,LoggedInUserEmail,review,updateReviewForm}: {produc
     setHoverReview("");
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const ratings = [
     { rating: 1, review: "Poor" },
     { rating: 2, review: "Fair" },
@@ -63,7 +63,7 @@ const ReviewForm = ({product,LoggedInUserEmail,review,updateReviewForm}: {produc
 
 
 
-  }, [updateReviewForm ])
+  }, [ratings, review, updateReviewForm])
 
   async function handleUpdateReview(e: React.FormEvent) {
     e.preventDefault()
@@ -176,25 +176,25 @@ const ReviewForm = ({product,LoggedInUserEmail,review,updateReviewForm}: {produc
 };
 
 export default ReviewForm;
-async function createReviewAction(formData: any) {
-    const product_id = Number( formData.get("product_id"))
-    const slug =  formData.get("slug")
-    const review = formData.get("review")
-    const rating = Number( formData.get("rating"))
-    const email = formData.get("email")
+async function createReviewAction(formData: FormData) {
+    const product_id = Number(formData.get("product_id"));
+    const slug = String(formData.get("slug") ?? "");
+    const review = String(formData.get("review") ?? "");
+    const rating = Number(formData.get("rating"));
+    const email = String(formData.get("email") ?? "");
 
-    if(!product_id || !email || !rating || !review || !slug ){
-        throw new Error("All fields are required")
+    if (!product_id || !email || !rating || !review || !slug) {
+        throw new Error("All fields are required");
     }
     const payload = {
-    product_id: product_id,
-    slug: slug,
-    review: review,
-    rating: rating,
-    email: email,
-  };
+        product_id: product_id,
+        slug: slug,
+        review: review,
+        rating: rating,
+        email: email,
+    };
     const res = await api.post("add_review/", payload);
 
-return res.data;
-  }
+    return res.data;
+}
 

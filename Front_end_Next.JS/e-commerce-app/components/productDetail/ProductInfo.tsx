@@ -9,7 +9,6 @@ import { useCart } from '../context/CartContext'
 import { addToCartAction, addToWishlistAction } from '@/lib/action'
 import { toast } from 'react-toastify'
 import WishlistTooltip from '../uiComponents/WishlistTooltip'
-import { constants } from 'buffer'
 
 const ProductInfo = ({product , LoggedInUserEmail}: {product: ProductDetails , LoggedInUserEmail:string | null |undefined}) => {
   const {cartCode ,setcartItemsCount } = useCart()

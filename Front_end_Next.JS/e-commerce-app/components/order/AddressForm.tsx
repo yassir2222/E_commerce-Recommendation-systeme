@@ -11,7 +11,7 @@ const AddressForm = ({email, address}: {email: string | null |undefined, address
     const [city , setCity] = useState(address?.city? address.city : "")
     const [street , setStreet] = useState(address?.street? address.street : "")
     const [phone , setPhone] = useState(address?.phone? address.phone : "")
-    const [btnLoader, setBtnLoader] = useState(false)
+    const [btnLoader] = useState(false)
 
     function disableButton(){
         if(state.trim().length==0 || city.trim().length==0 || street.trim().length==0 || phone.trim().length ==0){

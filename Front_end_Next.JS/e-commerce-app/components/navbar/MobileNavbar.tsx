@@ -13,7 +13,7 @@ interface Props {
      name : string;
         email : string;
         image : string;
-  }
+  } | null
 }
 const MobileNavbar = ({LoggedInUser} : Props) => {
   return (

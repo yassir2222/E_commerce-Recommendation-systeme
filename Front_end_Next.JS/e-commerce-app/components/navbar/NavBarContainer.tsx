@@ -5,8 +5,14 @@ import { auth } from '@/auth'
 const NavBarContainer = async () => {
     const session = await auth()
     const user = session?.user
+
+      const loggedInUser = user ? {
+        name: user.name || '',
+        email: user.email || '',
+        image: user.image || ''
+    } : null
   return (
-    <NavBar LoggedInUser={user}></NavBar>
+    <NavBar LoggedInUser={loggedInUser}></NavBar>
   )
 }
 
